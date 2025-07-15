@@ -1,97 +1,87 @@
-# Chrome MCP for WSL Claude Code + Windows Chrome
+# Chrome MCP for Claude Desktop on Windows
 
-Quick setup for using Claude Code in WSL to control Chrome on Windows.
+Quick setup for using Claude Desktop to control Chrome on Windows.
 
 ## Prerequisites
-- Windows with WSL installed
-- Chrome on Windows
-- Claude Code in WSL
-- Node.js on Windows (NOT WSL) - https://nodejs.org/
+- Windows 10/11
+- Claude Desktop app
+- Chrome browser
+- Node.js (https://nodejs.org/)
 
-## Quick Setup (Copy-Paste Commands)
+## Setup Instructions
 
-### 1. Windows Setup (PowerShell as Admin)
+### 1. Install Chrome MCP Bridge (PowerShell Admin)
 ```powershell
-# Install Chrome MCP Bridge
 npm install -g mcp-chrome-bridge
+```
 
-# Download and load Chrome extension from:
-# https://github.com/hangwin/mcp-chrome/releases
-# Then get Extension ID from chrome://extensions/
+### 2. Load Chrome Extension
+1. Download from: https://github.com/hangwin/mcp-chrome/releases
+2. Open Chrome → `chrome://extensions/`
+3. Enable "Developer mode"
+4. Click "Load unpacked" → Select extension folder
+5. Copy the Extension ID
 
-# Register extension (replace YOUR_EXTENSION_ID)
+### 3. Register Extension
+```powershell
 mcp-chrome-bridge register
-# Paste YOUR_EXTENSION_ID when prompted
+# Enter your Extension ID when prompted
 ```
 
-### 2. WSL Setup (WSL Terminal)
-```bash
-# Create Claude Code config
-mkdir -p ~/.claude
-cat > ~/.claude/mcpSettings.json << 'EOF'
-{
-  "chrome-mcp": {
-    "type": "streamableHttp",
-    "url": "http://localhost:12306/mcp"
-  }
-}
-EOF
+### 4. Configure Claude Desktop
+1. Copy `claude_desktop_config.json` from this repo
+2. Edit the file - replace `YOUR_USERNAME` with your Windows username
+3. Save to: `%APPDATA%\Claude\claude_desktop_config.json`
+4. Restart Claude Desktop
 
-# Test connection
-curl http://localhost:12306/health
-```
-
-### 3. Connect
-1. Open Chrome on Windows
+### 5. Connect
+1. Open Chrome
 2. Click Chrome MCP extension → "Connect"
 3. Should show "Connected" on port 12306
-4. In WSL Claude Code: type `/mcp`
+4. In Claude Desktop: Chrome tools should be available
 
 ## Configuration File
 
-Save this as `~/.claude/mcpSettings.json` in WSL:
+Save this as `%APPDATA%\Claude\claude_desktop_config.json`:
 ```json
 {
-  "chrome-mcp": {
-    "type": "streamableHttp",
-    "url": "http://localhost:12306/mcp"
+  "mcpServers": {
+    "chrome-mcp": {
+      "command": "node",
+      "args": ["C:\\Users\\YOUR_USERNAME\\AppData\\Roaming\\npm\\node_modules\\mcp-chrome-bridge\\dist\\mcp\\mcp-server-stdio.js"]
+    }
   }
 }
 ```
 
+Replace `YOUR_USERNAME` with your actual Windows username.
+
 ## Troubleshooting
+
+### Can't find mcp-server-stdio.js
+```powershell
+# Find the correct path
+dir C:\Users\%USERNAME%\AppData\Roaming\npm\node_modules\mcp-chrome-bridge\dist\mcp\
+```
 
 ### Extension shows "NATIVE_DISCONNECTED"
 ```powershell
-# Windows PowerShell - Reinstall
+# Reinstall
 npm uninstall -g mcp-chrome-bridge
 npm install -g mcp-chrome-bridge
 mcp-chrome-bridge register
 ```
 
-### Can't connect from WSL
-```powershell
-# Windows PowerShell Admin - Allow WSL access
-New-NetFirewallRule -DisplayName "Chrome MCP WSL" -Direction Inbound -LocalPort 12306 -Protocol TCP -Action Allow
-```
-
-### Test Commands
-```bash
-# WSL - Test connection
-curl http://localhost:12306/health
-
-# WSL - Test MCP
-curl -X POST http://localhost:12306/mcp \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"0.1.0"},"id":1}'
-```
+### Claude Desktop doesn't show Chrome tools
+1. Verify config file is in correct location: `%APPDATA%\Claude\`
+2. Check path in config matches your installation
+3. Restart Claude Desktop completely
+4. Ensure Chrome extension shows "Connected"
 
 ## For Multiple Computers
 
-1. Save your Extension ID: `YOUR_EXTENSION_ID_HERE`
-2. Copy this README to new computer
-3. Run Windows commands in PowerShell
-4. Run WSL commands in WSL terminal
-5. Replace Extension ID where needed
-
-That's it! Keep Chrome extension connected when using Claude Code.
+1. Note your Extension ID: `YOUR_EXTENSION_ID`
+2. Note your Windows username for each computer
+3. Copy this README
+4. Update username in config file for each computer
+5. Follow steps 1-5 on each machine
