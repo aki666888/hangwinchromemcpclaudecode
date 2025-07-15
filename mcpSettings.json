@@ -1,0 +1,6 @@
+{
+  "chrome-mcp": {
+    "type": "streamableHttp",
+    "url": "http://localhost:12306/mcp"
+  }
+}
