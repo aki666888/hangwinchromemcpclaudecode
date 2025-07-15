@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "chrome-mcp-server": {
+      "command": "node",
+      "args": ["PATH_TO_MCP_SERVER_STDIO_JS"]
+    }
+  }
+}

@@ -1,0 +1,25 @@
+# Node modules
+node_modules/
+npm-debug.log*
+
+# Claude local files
+.claude/todos/
+.claude/cache/
+.claude/*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Backup files
+*.backup
+*.backup.*
+
+# Temporary files
+*.tmp
+*.temp
+*~

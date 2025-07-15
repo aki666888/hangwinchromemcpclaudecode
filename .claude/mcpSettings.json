@@ -1,0 +1,10 @@
+{
+  "chrome-mcp": {
+    "command": "node",
+    "args": ["/home/info0/.nvm/versions/node/v24.3.0/lib/node_modules/mcp-chrome-bridge/dist/mcp/mcp-server-stdio.js"]
+  },
+  "chrome-mcp-server": {
+    "type": "streamableHttp",
+    "url": "http://127.0.0.1:12306/mcp"
+  }
+}
